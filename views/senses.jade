@@ -1,0 +1,52 @@
+include includes/head
+include includes/foot
+
+div.container-fluid
+  dl
+    dt= synset[0].name
+    dd
+      div.lemma
+  div.row-fluid
+    div.span3
+      ul(class='nav nav-tabs nav-stacked')
+
+    div.span9
+      ul
+
+script
+  $("div.lemma").each(function(){
+    var href="/lemma/#{synset[0].synset}";
+    var div_lemma = $(this);
+    $.getJSON(href,function(json){
+      // console.log(json);
+      var lemma = json.map(function(item){return item.lemma;}).join('; ');
+      console.log(lemma);
+      div_lemma.text(lemma);
+    });
+  });
+  $("div.span3 ul.nav").each(function(){
+    var href="/synlinks/#{synset[0].synset}";
+    var ul = $(this);
+    $.getJSON(href,function(json){
+      // console.log(json);
+      for(var i in json){
+        var link = json[i].link;
+        var name = json[i].name;
+        var pos = json[i].pos;
+        var synset2 = json[i].synset2;
+        var li = $("<li><a href='/sense/"+ synset2 +"'>"+link+": <i>"+pos + ".</i> " +name+"</a></li>");
+        ul.append(li);
+      }
+    });
+  });
+  $("div.span9 ul").each(function(){
+    var href="/def/#{synset[0].synset}";
+    var ul = $(this);
+    $.getJSON(href,function(json){
+      // console.log(json);
+      for(var i in json){
+        var li = $("<li>"+json[i].def+"</li>");
+        ul.append(li);
+      }
+    });
+  });

@@ -1,0 +1,10 @@
+div(class='navbar navbar-fixed-top')
+  div.navbar-inner
+    div.container
+      div.nav-collapse
+        div(class='nav pull-right')
+          div
+            input(type='text', class='search-query', placeholder="Search")
+
+script
+  $("input.search-query").change(function(event){ window.location='/words/' + $(this).val(); });
