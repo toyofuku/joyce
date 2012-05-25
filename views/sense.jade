@@ -1,5 +1,5 @@
 include includes/head
-include includes/foot
+//include includes/foot
 
 div.container-fluid
   div.row-fluid
@@ -20,24 +20,28 @@ div.container-fluid
           ul.ex
 
 script
+  $("div.span3 ul.nav").each(function(){
+    var href="/synlinks/#{synset[0].synset}", ul = $(this);
+    $.getJSON(href,function(json){
+      for(var key in json){
+        ul.append($("<li class='nav-header'>"+key+"</li>"));
+        var links = json[key];
+        for(var i in links){
+          var  link = links[i].link,
+            name = links[i].name,
+            pos = links[i].pos,
+            synset2 = links[i].synset2,
+            li = $("<li><a href='/sense/"+ synset2 +"'><i>"+pos + ".</i> " +name+"</a></li>");
+          ul.append(li);
+        }
+      }
+    });
+  });
   $("p.lemma").each(function(){
     var href="/lemma/#{synset[0].synset}", div_lemma = $(this);
     $.getJSON(href,function(json){
       var lemma = json.map(function(item){return "<a href='/words/"+item.lemma+"'>"+item.lemma+"</a>";}).join(' ');
       div_lemma.append($(lemma));
-    });
-  });
-  $("div.span3 ul.nav").each(function(){
-    var href="/synlinks/#{synset[0].synset}", ul = $(this);
-    $.getJSON(href,function(json){
-      for(var i in json){
-        var link = json[i].link,
-          name = json[i].name,
-          pos = json[i].pos,
-          synset2 = json[i].synset2,
-          li = $("<li><a href='/sense/"+ synset2 +"'>"+link+": <i>"+pos + ".</i> " +name+"</a></li>");
-        ul.append(li);
-      }
     });
   });
   $("div.span9 ul.def").each(function(){
@@ -56,5 +60,6 @@ script
         var li = $("<li>"+json[i].def+"</li>");
         ul.append(li);
       }
+      if(json.length==0){$("ul.ex").siblings("h2").hide();}
     });
   });

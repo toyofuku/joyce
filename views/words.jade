@@ -1,13 +1,16 @@
 include includes/head
-include includes/foot
+//include includes/foot
 
 div.container-fluid
   div.row-fluid
     div.span3
       ul(class='nav nav-tabs nav-stacked')
+        li.nav-header synset
         - words.forEach(function(w){
           li
-            a(href='/sense/#{w.synset}')= w.pos + ". " + w.name
+            a(href='/sense/#{w.synset}')
+              i= w.pos+". "
+              span= w.name
         - })
 
     div.span9

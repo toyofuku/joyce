@@ -32,39 +32,48 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', routes.index);
-app.get('/words/:lemma',function(req, res){
-  db.all("SELECT w.lemma, w.pos, s.synset, ss.name "+
-"FROM word as w, sense as s, synset ss "+
-"WHERE w.lemma=? and w.wordid=s.wordid and s.synset=ss.synset", req.params.lemma, function(err, rows){
-    res.render('words', { title: 'Words', words: rows})
+app.get('/linkdef',function(req, res){
+  db.all("SELECT * FROM link_def ORDER BY link", function(err, rows){
+    res.render('linkdef', { title: 'joice - linkdef', linkdef: rows})
   });
 });
-app.get('/senses/:wordid',function(req, res){
-  db.all("SELECT ss.name, s.synset, s.rank, s.lexid, s.freq, sd.def "+
-"FROM sense as s, synset_def as sd, synset as ss "+
-"WHERE s.wordid=? and s.synset=sd.synset and s.synset=ss.synset "+
-"order by s.synset", req.params.wordid, function(err, rows){
-    res.render('senses', { title: 'Senses', senses: rows})
-  });
+app.get('/words/:lemma',function(req, res){
+  var lemma = req.params.lemma;
+  if(lemma){
+    db.all("SELECT DISTINCT w.lemma, w.pos, s.synset, ss.name "+
+"FROM word as w, sense as s, synset ss "+
+"WHERE w.lemma=? and w.wordid=s.wordid and s.synset=ss.synset "+
+"ORDER BY w.pos, ss.name", lemma.toLowerCase(), function(err, rows){
+      if(rows.length!=0){
+        res.render('words', { title: 'joice - words', words: rows})
+      }
+    });
+  }
 });
 app.get('/sense/:synset',function(req, res){
-  db.all("SELECT synset, pos, name, src FROM synset WHERE synset=?", req.params.synset, function(err, rows){
-    res.render('senses', { title: 'Senses', synset: rows});
-  });
-});
-app.get('/lemma/:synset',function(req, res){
-  db.all("SELECT w.pos, w.lemma "+
-"FROM sense as s, word as w "+
-"WHERE s.synset=? and s.wordid=w.wordid "+
-"ORDER BY w.pos, w.lemma", req.params.synset, function(err, rows){
-    res.json(rows, 200);
+  db.all("SELECT DISTINCT synset, pos, name, src FROM synset WHERE synset=?", req.params.synset, function(err, rows){
+    res.render('sense', { title: 'joice - sense', synset: rows});
   });
 });
 app.get('/synlinks/:synset',function(req, res){
-  db.all("SELECT sl.synset2, sl.link, ss.name, ss.pos "+
-"FROM synlink as sl, synset ss "+
-"WHERE sl.synset1=? and sl.synset2=ss.synset "+
-"ORDER BY sl.link, ss.name, ss.pos", req.params.synset, function(err, rows){
+  db.all("SELECT DISTINCT sl.synset2, sl.link, ld.def, ss.name, ss.pos "+
+"FROM synlink as sl, synset as ss, sense as s, link_def as ld "+
+"WHERE sl.synset1=? and sl.synset2=ss.synset and sl.synset2=s.synset and sl.link=ld.link "+
+"ORDER BY sl.link, s.freq desc, ss.name, ss.pos", req.params.synset, function(err, rows){
+    var result = {};
+    for(var i in rows){
+      var link = rows[i].def;
+      if(!result[link]){ result[link] = []; }
+      result[link].push(rows[i]);
+    }
+    res.json(result, 200);
+  });
+});
+app.get('/lemma/:synset',function(req, res){
+  db.all("SELECT DISTINCT w.pos, w.lemma "+
+"FROM sense as s, word as w "+
+"WHERE s.synset=? and s.wordid=w.wordid "+
+"ORDER BY s.freq desc, s.lexid, w.pos, w.lemma", req.params.synset, function(err, rows){
     res.json(rows, 200);
   });
 });

@@ -1,0 +1,11 @@
+include includes/head
+//include includes/foot
+
+div.container-fluid
+  div.row
+    div(class="span5 offset1")
+      dl.dl-horizontal
+        - linkdef.forEach(function(ld){
+          dt= ld.link
+          dd= ld.def
+        - })

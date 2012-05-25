@@ -1,12 +1,17 @@
 include includes/head
-include includes/foot
+//include includes/foot
 
-h1= title
-p Welcome to #{title}
+div.container
+  header(class="jumbotron masthead")
+    div.inner
+      h1= title
+      p Simple and Flexible
 
-div.container-fluid
-  div.row-fluid
-    div.span3
-      p this is navi
-    div.span9
-      p this is target
+  hr.soften
+  div.row
+    div(class="span10 offset1")
+      ul
+        li
+          a(href="http://wordnet.princeton.edu/") WordNet - A lexical database for English
+        li
+          a(href="http://twitter.github.com/bootstrap/index.html") Twitter Bootstrap

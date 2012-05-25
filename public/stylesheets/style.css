@@ -1,10 +1,10 @@
-
 body {
+  background-repeat: repeat;
 }
-
 
 /* Tweak navbar brand link to be super sleek
 -------------------------------------------------- */
 .navbar-fixed-top .brand {
   color: #eee;
+  float: left;
 }
