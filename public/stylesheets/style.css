@@ -1,23 +1,10 @@
-/*
+
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
-  color: #00B7FF;
-}
-*/
 
-div.item{
-/*
-	text-align:center;
-*/
-}
-
-div.carousel div.item > img {
-/*
-	position: relative;
-	vertical-align: middle;
-*/
+/* Tweak navbar brand link to be super sleek
+-------------------------------------------------- */
+.navbar-fixed-top .brand {
+  color: #eee;
 }

@@ -1,10 +1,26 @@
 div(class='navbar navbar-fixed-top')
   div.navbar-inner
-    div.container
+    div.container-fluid
+      a(class="btn btn-navbar", data-toggle="collapse", data-target=".nav-collapse")
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a(class="brand", href="#") joyce
+      div(class="pull-right")
+        form.form-search
+          div(class="navbar-search")
+            div(class="input-append")
+              input(type='text', class='input-medium search-query', placeholder="Search")
+              span.add-on
+                i.icon-search
       div.nav-collapse
-        div(class='nav pull-right')
-          div
-            input(type='text', class='search-query', placeholder="Search")
+        ul.nav
+          li
+            a(href="#") Home
+          li
+            a(href="#") About
+          li
+            a(href="#") Contact
 
 script
   $("input.search-query").change(function(event){ window.location='/words/' + $(this).val(); });

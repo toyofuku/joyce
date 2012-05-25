@@ -8,7 +8,7 @@ var express = require('express')
   , sqlite3 = require('sqlite3').verbose();
 
 var app = module.exports = express.createServer();
-var db = new sqlite3.Database('/Users/toyofuku/Documents/python/wnjpn.db');
+var db = new sqlite3.Database('/Users/toyofuku/python/nltk/wnjpn.db');
 
 // Configuration
 
@@ -44,7 +44,6 @@ app.get('/senses/:wordid',function(req, res){
 "FROM sense as s, synset_def as sd, synset as ss "+
 "WHERE s.wordid=? and s.synset=sd.synset and s.synset=ss.synset "+
 "order by s.synset", req.params.wordid, function(err, rows){
-    console.log(rows)
     res.render('senses', { title: 'Senses', senses: rows})
   });
 });
@@ -58,7 +57,6 @@ app.get('/lemma/:synset',function(req, res){
 "FROM sense as s, word as w "+
 "WHERE s.synset=? and s.wordid=w.wordid "+
 "ORDER BY w.pos, w.lemma", req.params.synset, function(err, rows){
-    console.log(rows)
     res.json(rows, 200);
   });
 });
@@ -67,7 +65,6 @@ app.get('/synlinks/:synset',function(req, res){
 "FROM synlink as sl, synset ss "+
 "WHERE sl.synset1=? and sl.synset2=ss.synset "+
 "ORDER BY sl.link, ss.name, ss.pos", req.params.synset, function(err, rows){
-    console.log(rows)
     res.json(rows, 200);
   });
 });
@@ -75,7 +72,13 @@ app.get('/def/:synset',function(req, res){
   db.all("SELECT DISTINCT sd.def "+
 "FROM synset_def as sd "+
 "WHERE sd.synset=? ", req.params.synset, function(err, rows){
-    console.log(rows)
+    res.json(rows,200);
+  });
+});
+app.get('/examples/:synset',function(req, res){
+  db.all("SELECT DISTINCT sx.def "+
+"FROM synset_ex as sx "+
+"WHERE sx.synset=? ", req.params.synset, function(err, rows){
     res.json(rows,200);
   });
 });

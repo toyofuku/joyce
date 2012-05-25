@@ -4,7 +4,6 @@ include includes/foot
 div.container-fluid
   div.row-fluid
     div.span3
-      h1= words[0].lemma
       ul(class='nav nav-tabs nav-stacked')
         - words.forEach(function(w){
           li
@@ -12,4 +11,6 @@ div.container-fluid
         - })
 
     div.span9
-      p this is target
+      div.hero-unit
+        h1= words[0].lemma
+        p.test

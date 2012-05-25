@@ -2,48 +2,56 @@ include includes/head
 include includes/foot
 
 div.container-fluid
-  dl
-    dt= synset[0].name
-    dd
-      div.lemma
   div.row-fluid
     div.span3
       ul(class='nav nav-tabs nav-stacked')
 
     div.span9
-      ul
+      div.hero-unit
+        h1= synset[0].name
+        p.lemma
+      div.row-fluid
+        div
+          h2 definition
+          ul.def
+      div.row-fluid
+        div
+          h2 examples
+          ul.ex
 
 script
-  $("div.lemma").each(function(){
-    var href="/lemma/#{synset[0].synset}";
-    var div_lemma = $(this);
+  $("p.lemma").each(function(){
+    var href="/lemma/#{synset[0].synset}", div_lemma = $(this);
     $.getJSON(href,function(json){
-      // console.log(json);
-      var lemma = json.map(function(item){return item.lemma;}).join('; ');
-      console.log(lemma);
-      div_lemma.text(lemma);
+      var lemma = json.map(function(item){return "<a href='/words/"+item.lemma+"'>"+item.lemma+"</a>";}).join(' ');
+      div_lemma.append($(lemma));
     });
   });
   $("div.span3 ul.nav").each(function(){
-    var href="/synlinks/#{synset[0].synset}";
-    var ul = $(this);
+    var href="/synlinks/#{synset[0].synset}", ul = $(this);
     $.getJSON(href,function(json){
-      // console.log(json);
       for(var i in json){
-        var link = json[i].link;
-        var name = json[i].name;
-        var pos = json[i].pos;
-        var synset2 = json[i].synset2;
-        var li = $("<li><a href='/sense/"+ synset2 +"'>"+link+": <i>"+pos + ".</i> " +name+"</a></li>");
+        var link = json[i].link,
+          name = json[i].name,
+          pos = json[i].pos,
+          synset2 = json[i].synset2,
+          li = $("<li><a href='/sense/"+ synset2 +"'>"+link+": <i>"+pos + ".</i> " +name+"</a></li>");
         ul.append(li);
       }
     });
   });
-  $("div.span9 ul").each(function(){
-    var href="/def/#{synset[0].synset}";
-    var ul = $(this);
+  $("div.span9 ul.def").each(function(){
+    var href="/def/#{synset[0].synset}", ul = $(this);
     $.getJSON(href,function(json){
-      // console.log(json);
+      for(var i in json){
+        var li = $("<li>"+json[i].def+"</li>");
+        ul.append(li);
+      }
+    });
+  });
+  $("div.span9 ul.ex").each(function(){
+    var href="/examples/#{synset[0].synset}", ul = $(this);
+    $.getJSON(href,function(json){
       for(var i in json){
         var li = $("<li>"+json[i].def+"</li>");
         ul.append(li);
