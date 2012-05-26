@@ -8,3 +8,18 @@ body {
   color: #eee;
   float: left;
 }
+
+.navbar-search {
+    position: relative;
+}
+.navbar-search .search-query {
+    padding-left: 29px;
+}
+.navbar-search .icon-search {
+    position: absolute;
+    top: 7px;
+    left: 11px;
+}
+.navbar-search .search-query:focus, .navbar-search .search-query.focused {
+    padding-left: 30px;
+}

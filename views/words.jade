@@ -7,6 +7,7 @@ div.container-fluid
       ul(class='nav nav-tabs nav-stacked')
         li.nav-header synset
         - words.forEach(function(w){
+        - if(w.synset!='')
           li
             a(href='/sense/#{w.synset}')
               i= w.pos+". "

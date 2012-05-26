@@ -46,6 +46,8 @@ app.get('/words/:lemma',function(req, res){
 "ORDER BY w.pos, ss.name", lemma.toLowerCase(), function(err, rows){
       if(rows.length!=0){
         res.render('words', { title: 'joice - words', words: rows})
+      }else{
+        res.render('words', { title: 'joice - words', words: [{lemma:lemma+' - not found',synset:''}]})
       }
     });
   }
